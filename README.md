@@ -1,5 +1,7 @@
 ## svgShapeToPath
 
+Convert rect/circle/ellipse/polygon elements to path element.
+
 ### Install
 
 	```
