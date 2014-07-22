@@ -4,9 +4,9 @@ Convert rect/circle/ellipse/polygon elements to path element.
 
 ### Install
 
-	git clone git@github.com:mailzwj/svgShapeToPath.git
+	git clone git@github.com:mailzwj/sstp.git
 	# or
-	npm install svgShapeToPath
+	npm install sstp
 
 ### Use
 
