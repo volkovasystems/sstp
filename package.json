@@ -1,6 +1,6 @@
 {
     "name": "sstp",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "Convert svg shape elements to path element.",
     "main": "svg-shape-to-path.js",
     "scripts": {

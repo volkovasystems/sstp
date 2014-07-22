@@ -24,7 +24,10 @@ function convertRect(rects, context) {
                                 + " L " + x + " " + (y + h)
                                 + " Z");
         pathObj.setAttribute("fill", "#000");
-        node.parentNode.replaceChild(pathObj, node);
+        node.parentNode.insertBefore(pathObj, node);
+    }
+    while(rects.length > 0) {
+        rects.item(0).parentNode.removeChild(rects.item(0));
     }
 }
 
@@ -43,7 +46,10 @@ function convertCircle(circles, context) {
         pathObj = context.createElementNS(svgn, "path");
         pathObj.setAttribute("d", "M " + (cx - r) + " " + cy + " A " + r + " " + r + " 0 1 0 " + (cx + r) + " " + cy + " A " + r + " " + r + " 0 1 0 " + (cx - r) + " " + cy + " Z");
         pathObj.setAttribute("fill", "#000");
-        node.parentNode.replaceChild(pathObj, node);
+        node.parentNode.insertBefore(pathObj, node);
+    }
+    while(circles.length > 0) {
+        circles.item(0).parentNode.removeChild(circles.item(0));
     }
 }
 
@@ -68,7 +74,10 @@ function convertEllipse(ellipses, context) {
                                     + " C " + (cx - rx) + " " + (cy + ry) + " " + (cx - rx) + " " + (cy) + " " + (cx - rx) + " " + cy
                                     + " Z");
         pathObj.setAttribute("fill", "#000");
-        node.parentNode.replaceChild(pathObj, node);
+        node.parentNode.insertBefore(pathObj, node);
+    }
+    while(ellipses.length > 0) {
+        ellipses.item(0).parentNode.removeChild(ellipses.item(0));
     }
 }
 
@@ -90,7 +99,10 @@ function convertPolygon(polygons, context) {
         pathObj = context.createElementNS(svgn, "path");
         pathObj.setAttribute("d", data + " Z");
         pathObj.setAttribute("fill", "#000");
-        node.parentNode.replaceChild(pathObj, node);
+        node.parentNode.insertBefore(pathObj, node);
+    }
+    while(polygons.length > 0) {
+        polygons.item(0).parentNode.removeChild(polygons.item(0));
     }
 }
 
