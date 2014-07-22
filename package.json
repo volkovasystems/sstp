@@ -1,6 +1,6 @@
 {
     "name": "sstp",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Convert svg shape elements to path element.",
     "main": "svg-shape-to-path.js",
     "scripts": {
@@ -8,6 +8,13 @@
     },
     "dependencies": {
         "xmldom": "~0.1.19"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/mailzwj/sstp.git"
+    },
+    "bugs": {
+        "url": "https://github.com/mailzwj/sstp/issues"
     },
     "keywords": ["svg", "shape", "path"],
     "author": "mrzheng",
