@@ -4,9 +4,53 @@ var fs = require("fs"),
 
 var svgn = "http://www.w3.org/2000/svg";
 
+function getProxy(x, y, w, h, deg) {
+    var c = {x: x + w / 2, y: y + h / 2}, points = [], r;
+    r = Math.sqrt(Math.pow(w, 2) + Math.pow(h, 2)) / 2;
+    deg = deg * Math.PI / 180;
+    var deg1 = (Math.PI - Math.acos((w / 2) / r)) - parseFloat(deg),
+        deg2 = Math.acos((w / 2) / r) - parseFloat(deg),
+        deg3 = - Math.acos((w / 2) / r) - parseFloat(deg),
+        deg4 = Math.PI + Math.acos((w / 2) / r) - parseFloat(deg);
+    points.push({
+        x: c.x + r * Math.cos(deg1),
+        y: c.y - r * Math.sin(deg1)
+    });
+    points.push({
+        x: c.x + r * Math.cos(deg2),
+        y: c.y - r * Math.sin(deg2)
+    });
+    points.push({
+        x: c.x + r * Math.cos(deg3),
+        y: c.y - r * Math.sin(deg3)
+    });
+    points.push({
+        x: c.x + r * Math.cos(deg4),
+        y: c.y - r * Math.sin(deg4)
+    });
+    return points;
+}
+
+function getProxyEllipse(cx, cy, rx, ry, deg) {
+    var points = [];
+
+    deg = deg * Math.PI / 180;
+    points.push({
+        x: cx - rx * Math.cos(deg),
+        y: cy - rx * Math.sin(deg)
+    });
+    points.push({
+        x: points[0].x + 2 * rx * Math.cos(deg),
+        y: points[0].y + 2 * rx * Math.sin(deg)
+    });
+    return points;
+}
+
 function convertRect(rects, context) {
     var len = rects.length,
-        x, y, w, h, pathObj, node;
+        x, y, w, h, deg = 0, proxy = [],
+        tran, tranParam = [],
+        pathObj, node;
     if (len < 1) {
         return;
     }
@@ -17,11 +61,24 @@ function convertRect(rects, context) {
         y = +node.getAttribute("y");
         w = +node.getAttribute("width");
         h = +node.getAttribute("height");
+        tran = node.getAttribute("transform");
+
+        if (tran && tran.indexOf("matrix") !== -1) {
+            tranParam = tran.replace(/^matrix\s*\(([\d.\s-]+)\)/g, "$1").split(/\s|,/);
+        }
+
+        if (tranParam.length > 0) {
+            deg = Math.acos(tranParam[0]) * 180 / Math.PI;
+            if (tranParam[tranParam.length - 1] > 0) {
+                deg *= -1;
+            }
+        }
+        proxy = getProxy(x, y, w, h, deg);
         pathObj = context.createElementNS(svgn, "path");
-        pathObj.setAttribute("d", "M " + x + " " + y
-                                + " L " + (x + w) + " " + y
-                                + " L " + (x + w) + " " + (y + h)
-                                + " L " + x + " " + (y + h)
+        pathObj.setAttribute("d", "M " + proxy[0].x + " " + proxy[0].y
+                                + " L " + proxy[1].x + " " + proxy[1].y
+                                + " L " + proxy[2].x + " " + proxy[2].y
+                                + " L " + proxy[3].x + " " + proxy[3].y
                                 + " Z");
         pathObj.setAttribute("fill", "#000");
         node.parentNode.insertBefore(pathObj, node);
@@ -55,7 +112,9 @@ function convertCircle(circles, context) {
 
 function convertEllipse(ellipses, context) {
     var len = ellipses.length,
-        cx, cy, rx, ry, pathObj, node;
+        cx, cy, rx, ry, deg = 0,
+        tran, tranParam = [],
+        pathObj, node;
     if (len < 1) {
         return;
     }
@@ -66,12 +125,21 @@ function convertEllipse(ellipses, context) {
         cy = +node.getAttribute("cy");
         rx = +node.getAttribute("rx");
         ry = +node.getAttribute("ry");
+        tran = node.getAttribute("transform");
         pathObj = context.createElementNS(svgn, "path");
-        pathObj.setAttribute("d", "M " + (cx - rx) + " " + cy
-                                    + " C " + (cx - rx) + " " + (cy - ry) + " " + (cx) + " " + (cy - ry) + " " + cx + " " + (cy - ry)
-                                    + " C " + (cx + rx) + " " + (cy - ry) + " " + (cx + rx) + " " + cy + " " + (cx + rx) + " " + cy
-                                    + " C " + (cx + rx) + " " + (cy + ry) + " " + (cx) + " " + (cy + ry) + " " + cx + " " + (cy + ry)
-                                    + " C " + (cx - rx) + " " + (cy + ry) + " " + (cx - rx) + " " + (cy) + " " + (cx - rx) + " " + cy
+        if (tran && tran.indexOf("matrix") !== -1) {
+            tranParam = tran.replace(/^matrix\s*\(([\d.\s-]+)\)/g, "$1").split(/\s|,/);
+        }
+        if (tranParam.length > 0) {
+            deg = Math.acos(tranParam[0]) * 180 / Math.PI;
+            if (tranParam[tranParam.length - 1] > 0) {
+                deg *= -1;
+            }
+        }
+        points = getProxyEllipse(cx, cy, rx, ry, deg);
+        pathObj.setAttribute("d", "M " + points[0].x + " " + points[0].y
+                                    + " A " + rx + " " + ry + " " + deg + " 1 0 " + points[1].x + " " + points[1].y
+                                    + " A " + rx + " " + ry + " " + deg + " 1 0 " + points[0].x + " " + points[0].y
                                     + " Z");
         pathObj.setAttribute("fill", "#000");
         node.parentNode.insertBefore(pathObj, node);
