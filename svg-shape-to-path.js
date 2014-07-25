@@ -75,10 +75,10 @@ function convertRect(rects, context) {
         }
         proxy = getProxy(x, y, w, h, deg);
         pathObj = context.createElementNS(svgn, "path");
-        pathObj.setAttribute("d", "M " + proxy[0].x + " " + proxy[0].y
-                                + " L " + proxy[1].x + " " + proxy[1].y
-                                + " L " + proxy[2].x + " " + proxy[2].y
-                                + " L " + proxy[3].x + " " + proxy[3].y
+        pathObj.setAttribute("d", "M" + proxy[0].x.toFixed(3) + " " + proxy[0].y.toFixed(3)
+                                + " L" + proxy[1].x.toFixed(3) + " " + proxy[1].y.toFixed(3)
+                                + " L" + proxy[2].x.toFixed(3) + " " + proxy[2].y.toFixed(3)
+                                + " L" + proxy[3].x.toFixed(3) + " " + proxy[3].y.toFixed(3)
                                 + " Z");
         pathObj.setAttribute("fill", "#000");
         node.parentNode.insertBefore(pathObj, node);
@@ -101,7 +101,7 @@ function convertCircle(circles, context) {
         cy = +node.getAttribute("cy");
         r = +node.getAttribute("r");
         pathObj = context.createElementNS(svgn, "path");
-        pathObj.setAttribute("d", "M " + (cx - r) + " " + cy + " A " + r + " " + r + " 0 1 0 " + (cx + r) + " " + cy + " A " + r + " " + r + " 0 1 0 " + (cx - r) + " " + cy + " Z");
+        pathObj.setAttribute("d", "M" + (cx - r).toFixed(3) + " " + cy.toFixed(3) + " A" + r.toFixed(3) + " " + r.toFixed(3) + " 0 1 0 " + (cx + r).toFixed(3) + " " + cy.toFixed(3) + " A" + r.toFixed(3) + " " + r.toFixed(3) + " 0 1 0 " + (cx - r).toFixed(3) + " " + cy.toFixed(3) + " Z");
         pathObj.setAttribute("fill", "#000");
         node.parentNode.insertBefore(pathObj, node);
     }
@@ -137,9 +137,9 @@ function convertEllipse(ellipses, context) {
             }
         }
         points = getProxyEllipse(cx, cy, rx, ry, deg);
-        pathObj.setAttribute("d", "M " + points[0].x + " " + points[0].y
-                                    + " A " + rx + " " + ry + " " + deg + " 1 0 " + points[1].x + " " + points[1].y
-                                    + " A " + rx + " " + ry + " " + deg + " 1 0 " + points[0].x + " " + points[0].y
+        pathObj.setAttribute("d", "M" + points[0].x.toFixed(3) + " " + points[0].y.toFixed(3)
+                                    + " A" + rx.toFixed(3) + " " + ry.toFixed(3) + " " + deg.toFixed(3) + " 1 0 " + points[1].x.toFixed(3) + " " + points[1].y.toFixed(3)
+                                    + " A" + rx.toFixed(3) + " " + ry.toFixed(3) + " " + deg.toFixed(3) + " 1 0 " + points[0].x.toFixed(3) + " " + points[0].y.toFixed(3)
                                     + " Z");
         pathObj.setAttribute("fill", "#000");
         node.parentNode.insertBefore(pathObj, node);
@@ -159,10 +159,10 @@ function convertPolygon(polygons, context) {
     for (var n = 0; n < len; n++) {
         node = polygons.item(n);
         points = node.getAttribute("points").split(/\s|,/);
-        data = "M " + points[0] + " " + points[1];
+        data = "M" + points[0] + " " + points[1];
         points = points.slice(2);
         for (var i = 0, size = points.length - 2; i < size; i += 2) {
-            data += " L " + points[i] + " " + points[i + 1];
+            data += " L" + points[i] + " " + points[i + 1];
         }
         pathObj = context.createElementNS(svgn, "path");
         pathObj.setAttribute("d", data + " Z");
