@@ -207,6 +207,10 @@ exports.convertToPath = function(sourcefile, toFile) {
     doc = new DOMParser().parseFromString(svgString, "text/xml");
     svg = doc.getElementsByTagName("svg")[0];
 
+    console.log( sourcefile, sourcefile.match( /(?:\\|\/)([-a-z]+)\.svg$/ ) );
+
+    svg.setAttribute( "id", sourcefile.match( /(?:\\|\/)([-_a-z]+)\.svg$/ )[ 1 ] );
+
     rects = svg.getElementsByTagName("rect");
     circles = svg.getElementsByTagName("circle");
     ellipses = svg.getElementsByTagName("ellipse");
